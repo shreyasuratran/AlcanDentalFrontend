@@ -102,6 +102,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 18,
     fontWeight: '600',
+    fontFamily: 'Poppins-SemiBold',
   },
   sectionTitle: {
     backgroundColor: '#92BAE7',
@@ -111,6 +112,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     fontSize: 16,
     marginTop: 10,
+    fontFamily: 'Poppins-Medium', 
   },
   list: {
     paddingBottom: 100,
@@ -128,6 +130,7 @@ const styles = StyleSheet.create({
   listText: {
     fontSize: 15,
     color: '#333',
+    fontFamily: 'Poppins-Regular',
   },
   bottomContainer: {
     position: 'absolute',

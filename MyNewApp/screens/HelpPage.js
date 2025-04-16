@@ -1,6 +1,16 @@
+// HelpPage.js
 import React from 'react';
-import { View, Text, StyleSheet, FlatList, TouchableOpacity, SafeAreaView } from 'react-native';
-import { Ionicons, MaterialIcons, FontAwesome5 } from '@expo/vector-icons';
+import {
+  SafeAreaView,
+  View,
+  Text,
+  FlatList,
+  TouchableOpacity,
+  StyleSheet,
+} from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
+import Svg, { Path } from 'react-native-svg';
+import { Ionicons, FontAwesome5 } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 
 const topics = [
@@ -12,116 +22,149 @@ const topics = [
   { name: 'Account & Security', route: 'AccountSecurity' },
 ];
 
-const HelpPage = () => {
+export default function HelpPage() {
   const navigation = useNavigation();
 
   return (
-    <SafeAreaView style={styles.container}>
-      {/* Header */}
-      <View style={styles.header}>
-        <Text style={styles.headerText}>Help</Text>
-        <Ionicons name="menu" size={24} color="black" style={styles.menuIcon} />
-      </View>
+    <LinearGradient
+      // approximates your radial gradient
+      colors={['#cfe1f7', '#ffffff']}
+      style={styles.container}
+    >
+      <SafeAreaView style={styles.safeArea}>
+        {/* Header */}
+        <LinearGradient
+          colors={['#E0ECFF', '#FFFFFF']}
+          style={styles.header}
+        >
+          <Text style={styles.headerText}>Help</Text>
+          <Ionicons
+            name="menu"
+            size={24}
+            color="#222"
+            style={styles.menuIcon}
+          />
+        </LinearGradient>
 
-      {/* List */}
-      <FlatList
-        contentContainerStyle={styles.list}
-        data={topics}
-        keyExtractor={(item) => item.name}
-        renderItem={({ item }) => (
-          <TouchableOpacity
-            style={styles.topicItem}
-            onPress={() => navigation.navigate(item.route)}
+        {/* Content */}
+        <FlatList
+          data={topics}
+          keyExtractor={(i) => i.name}
+          contentContainerStyle={styles.list}
+          renderItem={({ item }) => (
+            <TouchableOpacity
+              activeOpacity={0.7}
+              onPress={() => navigation.navigate(item.route)}
+              style={styles.topicItem}
+            >
+              <Text style={styles.topicText}>{item.name}</Text>
+              <Ionicons name="chevron-forward" size={20} color="#002C59" />
+            </TouchableOpacity>
+          )}
+        />
+
+        {/* Bottom wave + nav */}
+        <View style={styles.bottomWrapper}>
+          <Svg
+            width="100%"
+            height={80}
+            viewBox="0 0 375 80"
+            style={styles.wave}
           >
-            <Text style={styles.topicText}>{item.name}</Text>
-            <Ionicons name="chevron-forward" size={20} color="#888" />
-          </TouchableOpacity>
-        )}
-      />
-
-      {/* Bottom Navigation */}
-      <View style={styles.bottomNav}>
-        <NavItem icon="book" label="Books" />
-        <NavItem icon="trophy" label="Trophy" />
-        <NavItem icon="map" label="Map" />
-        <NavItem icon="meditation" label="Mind" isFA5 />
-        <NavItem icon="settings" label="Settings" />
-      </View>
-    </SafeAreaView>
+            <Path
+              fill="#ffffff"
+              d="M0,0 C80,60 295,60 375,0 L375,80 L0,80 Z"
+            />
+          </Svg>
+          <View style={styles.bottomNav}>
+            <NavItem icon="book" />
+            <NavItem icon="trophy" />
+            <NavItem icon="map" />
+            <NavItem icon="brain" lib="FontAwesome5" />
+            <NavItem icon="settings" />
+          </View>
+        </View>
+      </SafeAreaView>
+    </LinearGradient>
   );
-};
+}
 
-const NavItem = ({ icon, label, isFA5 }) => (
-  <TouchableOpacity style={styles.navItem}>
-    {isFA5 ? (
-      <FontAwesome5 name={icon} size={20} color="#555" />
-    ) : (
-      <Ionicons name={icon} size={20} color="#555" />
-    )}
-    <Text style={styles.navLabel}>{label}</Text>
-  </TouchableOpacity>
-);
+function NavItem({ icon, lib }) {
+  const Icon = lib === 'FontAwesome5' ? FontAwesome5 : Ionicons;
+  return (
+    <TouchableOpacity style={styles.navItem}>
+      <Icon name={icon} size={24} color="#444" />
+    </TouchableOpacity>
+  );
+}
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#cfe1f7',
-  },
+  container: { flex: 1 },
+  safeArea: { flex: 1 },
   header: {
-    backgroundColor: '#E0ECFF',
-    padding: 20,
+    height: 80,
     borderBottomLeftRadius: 30,
     borderBottomRightRadius: 30,
-    position: 'relative',
+    justifyContent: 'center',
     alignItems: 'center',
+    position: 'relative',
   },
   headerText: {
     fontSize: 20,
     fontWeight: '600',
-    color: '#222',
+    color: '#002C59',
+    fontFamily: 'Poppins-SemiBold',
   },
   menuIcon: {
     position: 'absolute',
     right: 20,
-    top: 20,
+    top: 28,
   },
   list: {
-    paddingBottom: 100,
+    paddingTop: 16,
+    paddingBottom: 120, // so it scrolls above the footer
   },
   topicItem: {
-    backgroundColor: '#fff',
+    backgroundColor: '#E9F0F8',    // light blue
     paddingVertical: 16,
-    paddingHorizontal: 20,
+    paddingHorizontal: 24,
     borderBottomWidth: 1,
-    borderBottomColor: '#ccc',
+    borderBottomColor: '#CCDDEE',
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
   },
   topicText: {
     fontSize: 16,
-    color: '#222',
+    fontWeight: '600',
+    color: '#002C59',
+    fontFamily: 'Poppins-SemiBold',
+
   },
-  bottomNav: {
+
+  bottomWrapper: {
     position: 'absolute',
     bottom: 0,
-    height: 80,
-    backgroundColor: '#cfe1f7',
     width: '100%',
+    height: 100,
+    alignItems: 'center',
+  },
+  wave: {
+    position: 'absolute',
+    top: -20,
+  },
+  bottomNav: {
     flexDirection: 'row',
     justifyContent: 'space-around',
+    width: '90%',
+    height: 60,
     alignItems: 'center',
-    borderTopLeftRadius: 30,
-    borderTopRightRadius: 30,
+    backgroundColor: '#ffffff',
+    borderRadius: 30,
+    elevation: 4,
   },
   navItem: {
+    flex: 1,
     alignItems: 'center',
   },
-  navLabel: {
-    fontSize: 12,
-    marginTop: 4,
-    color: '#444',
-  },
 });
-
-export default HelpPage;
